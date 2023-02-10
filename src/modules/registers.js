@@ -27,7 +27,6 @@ const userSchema = new mongoose.Schema({
     },
     courses:{
         type:Array,
-        unique:true
     }
 
 }

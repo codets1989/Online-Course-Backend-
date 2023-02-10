@@ -2,11 +2,13 @@ const mongoose = require("mongoose");
 
 
 const CourseSchema = new mongoose.Schema({
-        course_id:Number,
-        course_name:String,
+        name:String,
         faculty:String,
         stream:String,
-        price:String
+        price:String,
+        status:String,
+        fac:String,
+        video:Array,
    
 }
 

@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/userdetails", {
+const dbs = mongoose.connect("mongodb://localhost:27017/userdetails", {
     useNewUrlParser:true,
     useUnifiedTopology:true,
     useCreateIndex:true
 }).then(()=>{ 
+
     console.log("connection successful");
 }
 ).catch((e)=>

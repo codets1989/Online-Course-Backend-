@@ -3,8 +3,10 @@ const bodyparser = require("body-parser");
 const jwt = require('jsonwebtoken');
 const path =require("path");
 const app= express();
+const crypto = require('crypto')
 var cors = require('cors');
 const dotenv = require('dotenv');
+const  facultyroute = require ('./routes/facultylogin.js')
 dotenv.config();
 const port = process.env.PORT || 8000;
 const verify = require("./src/modules/verifyToken");
@@ -12,6 +14,10 @@ const verify = require("./src/modules/verifyToken");
 const User = require("./src/modules/registers");
 const Course = require("./src/modules/course");
 const { ok } = require("assert");
+const Faculty = require("./src/modules/faculty");
+const { resolve } = require("path");
+
+
  app.use(express.static("D:/Software_project/Frontend/Html"));
  app.use(express.static("D:/Software_project/Frontend/Css"));
  app.set('view engine', 'ejs');
@@ -19,11 +25,15 @@ const { ok } = require("assert");
  app.use(cors());
  app.options('*', cors()); 
  app.use(bodyparser.json());
+
+ const mongoose = require("mongoose");
+const console = require("console");
+
  
  
  app.use(bodyparser.urlencoded({ extended: false }));
 console.log(__dirname);
-
+app.use('/faculty',facultyroute)
 
 app.get("/Register" ,async(req,res) =>
 {
@@ -41,15 +51,47 @@ app.get("/Login" ,async(req,res) =>
 app.post("/Register",async(req,res) => {
     try{
     
-      console.log(req.body)
-            const userd= new User({
+        console.log(req.body)
+                const userd= new User({
                 fullname: req.body.fullname,
                 username: req.body.username,
                 email: req.body.email,
                 password: req.body.password,
                 gender: req.body.gender,
                 interests: req.body.interests,
-            })
+                     })
+            
+            const registered = await userd.save();
+            if(registered===undefined)
+            {
+                const msg = {"success":false}
+                res.status(500).send(msg)
+            }
+            else
+            {
+            const msg = {"success":true}
+             res.send(msg);
+            }
+          
+    }
+    catch(e){
+        const msg = {"success":false}
+        res.send(msg); 
+    }
+}
+)
+app.post("/Regcourse",async(req,res) => {
+    try{
+    
+        console.log(req.body)
+                const userd= new Course({
+                course_id: req.body.fullname,
+                course_name: req.body.username,
+                faculty: req.body.email,
+                stream: req.body.password,
+                price: req.body.gender,
+                     })
+            
             const registered = await userd.save();
             if(registered===undefined)
             {
@@ -61,7 +103,7 @@ app.post("/Register",async(req,res) => {
             const msg = {"success":true}
              res.send(msg);
             }
-            // console.log(registered);
+          
     }
     catch(e){
         const msg = {"success":false}
@@ -176,7 +218,7 @@ catch(e){
  {
     //  console.log(req.body.id.course);
     try{
-        // console.log(req.body);
+         console.log(req.body);
         const userd= await Course.find({_id:req.body.id.course});
         // console.log(`Found course ${userd}`);
         // const coursed = JSON.stringify(userd);
@@ -327,6 +369,19 @@ catch(e){
 //     res.send(e);
 // }
 //  })
+  
+app.post("/Test",async(req,res) => {
+    try{
+    
+        console.log(res.json({file:req.file}));
+          
+    }
+    catch(e){
+
+        console.log("erro")
+    }
+}
+)
 app.listen(port , () => {
    console.log(`server is running at port no ${port}` );
 });
