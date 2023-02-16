@@ -14,6 +14,37 @@ router.get("/Test",async(req,res)=>{
         console.log("hello")
     }
 })
+router.post("/Register",async(req,res) => {
+    try{
+    
+        console.log(req.body)
+                const userd= new Faculty({
+                fullname: req.body.fullname,
+                username: req.body.username,
+                email: req.body.email,
+                password: req.body.password,
+                gender: req.body.gender,
+                     })
+            
+            const registered = await userd.save();
+            if(registered===undefined)
+            {
+                const msg = {"success":false}
+                res.status(500).send(msg)
+            }
+            else
+            {
+            const msg = {"success":true}
+             res.send(msg);
+            }
+          
+    }
+    catch(e){
+        const msg = {"success":false}
+        res.send(msg); 
+    }
+}
+)
 router.post("/login",async(req,res) => {
     
     try{
